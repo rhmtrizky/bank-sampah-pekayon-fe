@@ -23,38 +23,43 @@ export const rwNavItems: NavItem[] = [
     path: "/rw/dashboard",
   },
   {
-    icon: <ListIcon />,
-    name: "Transactions",
-    path: "/rw/transactions",
+    icon: <TableIcon />,
+    name: "Daftar Warga",
+    path: "/rw/warga-management",
   },
   {
     icon: <BoxCubeIcon />,
-    name: "Online Requests",
+    name: "Setoran Sampah Online",
     path: "/rw/online-requests",
   },
   {
+    icon: <ListIcon />,
+    name: "Transaksi",
+    path: "/rw/transactions",
+  },
+  {
     icon: <TableIcon />,
-    name: "Price List",
+    name: "Daftar Harga",
     path: "/rw/price-list",
   },
   {
     icon: <CalenderIcon />,
-    name: "Schedules",
+    name: "Jadwal",
     path: "/rw/schedules",
   },
   {
     icon: <BoxCubeIcon />,
-    name: "Bulk Sales",
+    name: "Penjualan Massal",
     path: "/rw/bulk-sales",
   },
   {
     icon: <PieChartIcon />,
-    name: "Reports",
+    name: "Laporan",
     path: "/rw/reports",
   },
   {
     icon: <UserCircleIcon />,
-    name: "Settings",
+    name: "Pengaturan",
     path: "/rw/settings",
   },
 ];

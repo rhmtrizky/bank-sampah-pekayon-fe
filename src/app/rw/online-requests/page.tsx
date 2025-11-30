@@ -15,7 +15,7 @@ export default function OnlineRequestsPage() {
 
   return (
     <div>
-      <PageBreadcrumb pageTitle="Online Requests" />
+      <PageBreadcrumb pageTitle="Setoran Sampah" />
       <div className="space-y-6">
         <div className="flex justify-end">
           <Button

@@ -87,11 +87,11 @@ export default function RequestTable() {
 
   const columns: Column<UIRequestRow>[] = [
     { 
-      header: "Created At", 
+      header: "Tanggal Setor", 
       accessorKey: "createdAt" 
     },
     { 
-      header: "Scheduled Date", 
+      header: "Tanggal Pengepulan", 
       cell: (row) => (
         <span className={row.scheduledDate !== '-' ? 'text-brand-600 dark:text-brand-400 font-medium' : 'text-gray-500'}>
           {row.scheduledDate}
@@ -112,7 +112,6 @@ export default function RequestTable() {
         <span className="text-gray-700 dark:text-gray-300">{row.rt ?? '-'}</span>
       ),
     },
-    { header: "Notes", accessorKey: "notes" },
     {
       header: "Status",
       cell: (row) => <Badge color={statusColor(row.status)}>{toTitle(row.status)}</Badge>,
