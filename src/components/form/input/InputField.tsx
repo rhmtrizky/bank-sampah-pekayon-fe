@@ -6,10 +6,12 @@ interface InputProps {
   name?: string;
   placeholder?: string;
   defaultValue?: string | number;
+  value?: string | number;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   className?: string;
   min?: string;
   max?: string;
+  required?: boolean;
   step?: number;
   disabled?: boolean;
   success?: boolean;
@@ -23,6 +25,8 @@ const Input: FC<InputProps> = ({
   name,
   placeholder,
   defaultValue,
+  value,
+  required,
   onChange,
   className = "",
   min,
@@ -53,8 +57,10 @@ const Input: FC<InputProps> = ({
         type={type}
         id={id}
         name={name}
+        required={required}
         placeholder={placeholder}
         defaultValue={defaultValue}
+        value={value}
         onChange={onChange}
         min={min}
         max={max}

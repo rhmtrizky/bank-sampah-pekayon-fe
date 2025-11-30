@@ -5,10 +5,49 @@ import Label from "@/components/form/Label";
 import { ChevronLeftIcon, EyeCloseIcon, EyeIcon } from "@/icons";
 import Link from "next/link";
 import React, { useState } from "react";
+import { authApi } from "@/lib/api/auth";
+import { useRouter } from "next/navigation";
+import Button from "@/components/ui/button/Button";
 
 export default function SignUpForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
+  
+  const [fname, setFname] = useState("");
+  const [lname, setLname] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [rePassword, setRePassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const router = useRouter();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (password !== rePassword) {
+      setError("Passwords do not match");
+      return;
+    }
+    
+    setLoading(true);
+    setError("");
+
+    try {
+      await authApi.register({
+        name: `${fname} ${lname}`,
+        email,
+        password,
+      });
+      // Redirect to sign in on success
+      router.push('/signin');
+    } catch (err: any) {
+      console.error(err);
+      setError(err.response?.data?.message || "Failed to sign up.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="flex flex-col flex-1 lg:w-1/2 w-full overflow-y-auto no-scrollbar">
       <div className="w-full max-w-md sm:pt-10 mx-auto mb-5">
@@ -30,9 +69,17 @@ export default function SignUpForm() {
               Enter your email and password to sign up!
             </p>
           </div>
+          
+          {error && (
+            <div className="mb-4 p-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
+              <span className="font-medium">Error!</span> {error}
+            </div>
+          )}
+
           <div>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-5">
               <button className="inline-flex items-center justify-center gap-3 py-3 text-sm font-normal text-gray-700 transition-colors bg-gray-100 rounded-lg px-7 hover:bg-gray-200 hover:text-gray-800 dark:bg-white/5 dark:text-white/90 dark:hover:bg-white/10">
+                {/* Google Icon */}
                 <svg
                   width="20"
                   height="20"
@@ -60,6 +107,7 @@ export default function SignUpForm() {
                 Sign up with Google
               </button>
               <button className="inline-flex items-center justify-center gap-3 py-3 text-sm font-normal text-gray-700 transition-colors bg-gray-100 rounded-lg px-7 hover:bg-gray-200 hover:text-gray-800 dark:bg-white/5 dark:text-white/90 dark:hover:bg-white/10">
+                {/* X Icon */}
                 <svg
                   width="21"
                   className="fill-current"
@@ -83,7 +131,7 @@ export default function SignUpForm() {
                 </span>
               </div>
             </div>
-            <form>
+            <form onSubmit={handleSubmit}>
               <div className="space-y-5">
                 <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
                   {/* <!-- First Name --> */}
@@ -96,6 +144,9 @@ export default function SignUpForm() {
                       id="fname"
                       name="fname"
                       placeholder="Enter your first name"
+                      value={fname}
+                      onChange={(e) => setFname(e.target.value)}
+                      required
                     />
                   </div>
                   {/* <!-- Last Name --> */}
@@ -108,6 +159,9 @@ export default function SignUpForm() {
                       id="lname"
                       name="lname"
                       placeholder="Enter your last name"
+                      value={lname}
+                      onChange={(e) => setLname(e.target.value)}
+                      required
                     />
                   </div>
                 </div>
@@ -121,6 +175,9 @@ export default function SignUpForm() {
                     id="email"
                     name="email"
                     placeholder="Enter your email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
                   />
                 </div>
                 {/* <!-- Password --> */}
@@ -130,10 +187,16 @@ export default function SignUpForm() {
                   </Label>
                   <div className="relative">
                     <Input
-                      placeholder="Enter your password"
                       type={showPassword ? "text" : "password"}
+                      id="password"
+                      name="password"
+                      placeholder="Enter your password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
                     />
-                    <span
+                    <button
+                      type="button"
                       onClick={() => setShowPassword(!showPassword)}
                       className="absolute z-30 -translate-y-1/2 cursor-pointer right-4 top-1/2"
                     >
@@ -142,15 +205,43 @@ export default function SignUpForm() {
                       ) : (
                         <EyeCloseIcon className="fill-gray-500 dark:fill-gray-400" />
                       )}
-                    </span>
+                    </button>
+                  </div>
+                </div>
+                {/* <!-- Re-type Password --> */}
+                <div>
+                  <Label>
+                    Re-type Password<span className="text-error-500">*</span>
+                  </Label>
+                  <div className="relative">
+                    <Input
+                      type={showPassword ? "text" : "password"}
+                      id="re-password"
+                      name="re-password"
+                      placeholder="Re-enter your password"
+                      value={rePassword}
+                      onChange={(e) => setRePassword(e.target.value)}
+                      required
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute z-30 -translate-y-1/2 cursor-pointer right-4 top-1/2"
+                    >
+                      {showPassword ? (
+                        <EyeIcon className="fill-gray-500 dark:fill-gray-400" />
+                      ) : (
+                        <EyeCloseIcon className="fill-gray-500 dark:fill-gray-400" />
+                      )}
+                    </button>
                   </div>
                 </div>
                 {/* <!-- Checkbox --> */}
                 <div className="flex items-center gap-3">
                   <Checkbox
-                    className="w-5 h-5"
                     checked={isChecked}
                     onChange={setIsChecked}
+                    className="w-5 h-5"
                   />
                   <p className="inline-block font-normal text-gray-500 dark:text-gray-400">
                     By creating an account means you agree to the{" "}
@@ -165,12 +256,14 @@ export default function SignUpForm() {
                 </div>
                 {/* <!-- Button --> */}
                 <div>
-                  <button className="flex items-center justify-center w-full px-4 py-3 text-sm font-medium text-white transition rounded-lg bg-brand-500 shadow-theme-xs hover:bg-brand-600">
-                    Sign Up
-                  </button>
+                  <Button className="w-full" size="sm" disabled={loading}>
+                    {loading ? "Signing up..." : "Sign Up"}
+                  </Button>
                 </div>
               </div>
             </form>
+
+
 
             <div className="mt-5">
               <p className="text-sm font-normal text-center text-gray-700 dark:text-gray-400 sm:text-start">
