@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import PageBreadcrumb from "@/components/common/PageBreadCrumb";
-import RequestTable from "./RequestTable";
+import RequestTable from './RequestTable';
 import BulkScheduleModal from "./BulkScheduleModal";
 import Button from "@/components/ui/button/Button";
 

@@ -1,11 +1,13 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import Input from "@/components/form/input/InputField";
 import BasicTableOne, { Column } from "@/components/tables/BasicTableOne";
 import EmptyState from "@/components/common/EmptyState";
 import Badge from "@/components/ui/badge/Badge";
 import Pagination from "@/components/tables/Pagination";
 import api from "@/lib/axios";
 import ScheduleModal from "./ScheduleModal";
+import Button from "@/components/ui/button/Button";
 
 interface UIRequestRow {
   id: number;
@@ -13,7 +15,8 @@ interface UIRequestRow {
   scheduledDate?: string;
   wargaName: string;
   wargaId: number;
-  rt?: number | null;
+  rt?: number | string | null;
+  phone: string;
   notes?: string;
   status: "pending" | "scheduled" | "completed" | "cancelled";
 }
@@ -34,20 +37,34 @@ const statusColor = (status: UIRequestRow["status"]) => {
 const toTitle = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
 export default function RequestTable() {
+
   const [rows, setRows] = useState<UIRequestRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
-  const [limit] = useState<number>(10);
+  const [limit, setLimit] = useState<number>(10);
   const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
   const [selectedRequestId, setSelectedRequestId] = useState<number | null>(null);
+  // Filter states
+  const [filterName, setFilterName] = useState("");
+  const [filterPhone, setFilterPhone] = useState("");
+  const [filterDate, setFilterDate] = useState("");
+  const [filterStatus, setFilterStatus] = useState("");
 
   const loadData = async () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await api.get(`/dashboard/rw/recent/requests?page=${page}&limit=${limit}`);
+      // Build query params for filters
+      const params = new URLSearchParams();
+      params.append("page", String(page));
+      params.append("limit", String(limit));
+      if (filterName) params.append("name", filterName);
+      if (filterPhone) params.append("phone", filterPhone);
+      if (filterDate) params.append("date", filterDate);
+      if (filterStatus) params.append("status", filterStatus);
+      const res = await api.get(`/dashboard/rw/recent/requests?${params.toString()}`);
       const envelope = res.data;
       const list = envelope?.data?.data ?? [];
       const pagination = envelope?.data?.pagination ?? { totalPages: 1 };
@@ -63,6 +80,7 @@ export default function RequestTable() {
         wargaName: item.user?.name || `User ${item.user?.user_id ?? ''}`,
         wargaId: item.user?.user_id ?? 0,
         rt: item.user?.rt ? `0${item.user.rt}` : null,
+        phone: item.user?.phone,
         notes: '-',
         status: item.status,
       }));
@@ -107,6 +125,14 @@ export default function RequestTable() {
       ),
     },
     {
+      header: "Nomor Telepon",
+      cell: (row) => (
+        <div>
+          <p className="font-medium text-gray-800 dark:text-white/90">{row.phone}</p>
+        </div>
+      ),
+    },
+    {
       header: "RT",
       cell: (row) => (
         <span className="text-gray-700 dark:text-gray-300">{row.rt ?? '-'}</span>
@@ -141,38 +167,88 @@ export default function RequestTable() {
 
   useEffect(() => {
     loadData();
-  }, [page, limit]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page, limit, filterName, filterPhone, filterDate, filterStatus]);
 
   if (loading) return <div className="p-4 text-center">Loading requests...</div>;
-  
-  if (!rows.length)
+
+  // Filter UI
+  const statusOptions = [
+    { value: '', label: 'Semua Status' },
+    { value: 'pending', label: 'Pending' },
+    { value: 'scheduled', label: 'Scheduled' },
+    { value: 'completed', label: 'Completed' },
+    { value: 'cancelled', label: 'Cancelled' },
+  ];
+
+  const handleFilterSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setPage(1); // reset to first page on filter
+    loadData();
+  };
+
   return (
     <>
-      <div className="space-y-4">
-        <BasicTableOne
-          columns={columns}
-          data={[]}
-          emptyMessage="Data kosong / empty"
-        />
-         <div className="flex justify-end">
-          <Pagination currentPage={page} totalPages={totalPages} onPageChange={(p) => setPage(p)} />
+      <form className="mb-4 flex flex-wrap gap-2 items-end" onSubmit={handleFilterSubmit}>
+        <div>
+          <label className="block text-xs font-medium text-gray-700 mb-1">Nama Warga</label>
+          <Input
+            type="text"
+            placeholder="Cari nama..."
+            value={filterName}
+            onChange={e => setFilterName(e.target.value)}
+          />
         </div>
-      </div>
-      <ScheduleModal
-        isOpen={isScheduleModalOpen}
-        onClose={() => setIsScheduleModalOpen(false)}
-        requestId={selectedRequestId ?? 0}
-        onSuccess={handleScheduleSuccess}
-      />
-    </>
-  );
+        <div>
+          <label className="block text-xs font-medium text-gray-700 mb-1">No. Telepon</label>
+          <Input
+            type="text"
+            placeholder="Cari no. telepon..."
+            value={filterPhone}
+            onChange={e => setFilterPhone(e.target.value)}
+          />
+        </div>
+        <div>
+          <label className="block text-xs font-medium text-gray-700 mb-1">Tanggal Setor</label>
+          <Input
+            type="date"
+            value={filterDate}
+            className="w-full rounded border border-gray-300 bg-white px-3 py-3 text-sm outline-none focus:border-brand-500 dark:border-white/10 dark:bg-white/5 dark:focus:border-brand-500"
+            onChange={e => setFilterDate(e.target.value)}
+          />
+        </div>
+        <div>
+          <label className="block text-xs font-medium text-gray-700 mb-1">Status</label>
+          <select
+          className="w-full rounded border border-gray-300 bg-white px-3 py-3 text-sm outline-none focus:border-brand-500 dark:border-white/10 dark:bg-white/5 dark:focus:border-brand-500"
+            value={filterStatus}
+            onChange={e => setFilterStatus(e.target.value)}
+          >
+            {statusOptions.map(opt => (
+              <option key={opt.value} value={opt.value}>{opt.label}</option>
+            ))}
+          </select>
+        </div>
+       
+          <div className="flex gap-2 ml-2">
+                        <Button type="submit" size="sm" >Cari</Button>
+                        <Button type="submit" size="sm"  variant="outline"   onClick={() => { setFilterName(""); setFilterPhone(""); setFilterDate(""); setFilterStatus(""); setPage(1); }}>Reset</Button>
+                      </div>
+      </form>
 
-
-  return (
-    <>
       <div className="space-y-4">
-        <BasicTableOne columns={columns} data={rows} />
-        <div className="flex justify-end">
+        <BasicTableOne columns={columns} data={rows} emptyMessage="Data kosong / empty" />
+        <div className="flex justify-between items-center">
+          <div className="flex items-center gap-2">
+            <span className="text-xs">Tampil</span>
+            <select
+              className="border rounded px-1 py-0.5 text-xs"
+              value={limit}
+              onChange={e => { setLimit(Number(e.target.value)); setPage(1); }}
+            >
+              {[10, 20, 50].map(opt => <option key={opt} value={opt}>{opt}/page</option>)}
+            </select>
+          </div>
           <Pagination currentPage={page} totalPages={totalPages} onPageChange={(p) => setPage(p)} />
         </div>
       </div>
