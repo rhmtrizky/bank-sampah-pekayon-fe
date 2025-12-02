@@ -111,7 +111,7 @@ export default function TransactionTable() {
   };
 
   const load = () => {
-    const params: any = { page, limit: 10 };
+    const params: any = { page, limit: limit };
     if (month) params.month = Number(month);
     if (year) params.year = Number(year);
     if (name) params.name = name;
@@ -176,6 +176,7 @@ export default function TransactionTable() {
   };
 
   const columns = buildColumns(handleEdit, handleDelete);
+  const [limit, setLimit] = useState(10);
 
   return (
     <div className="space-y-4">
@@ -294,9 +295,19 @@ export default function TransactionTable() {
       ) : (
         <BasicTableOne columns={columns} data={rows} />
       )}
-      <div className="flex justify-end">
-        <Pagination currentPage={page} totalPages={totalPages} onPageChange={(p) => setPage(p)} />
-      </div>
+      <div className="flex justify-between items-center mt-3">
+          <div className="flex items-center gap-2">
+            <span className="text-xs">Tampil</span>
+            <select
+              className="border rounded px-1 py-0.5 text-xs"
+              value={limit}
+              onChange={e => { setLimit(Number(e.target.value)); setPage(1); }}
+            >
+              {[10, 20, 50].map(opt => <option key={opt} value={opt}>{opt}/page</option>)}
+            </select>
+          </div>
+          <Pagination currentPage={page} totalPages={totalPages} onPageChange={(p) => setPage(p)} />
+        </div>
 
       <CreateOfflineTransactionModal
         isOpen={isCreateOpen}

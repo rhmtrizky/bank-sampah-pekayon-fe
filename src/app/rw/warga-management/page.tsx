@@ -21,6 +21,7 @@ export default function WargaManagementPage() {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [limit, setLimit] = useState(10);
 
   const fetchWarga = async (overrideParams?: { name?: string; phone?: string; page?: number }) => {
     setLoading(true);
@@ -32,7 +33,7 @@ export default function WargaManagementPage() {
       
       const result = await wargaService.list({
         page: p,
-        limit: 10,
+        limit: limit,
         name: n,
         phone: ph,
       });
@@ -149,13 +150,19 @@ export default function WargaManagementPage() {
         ) : (
           <>
             <BasicTableOne columns={columns} data={warga}  emptyMessage="Data kosong / empty"/>
-            <div className="flex justify-end">
-              <Pagination
-                currentPage={page}
-                totalPages={totalPages}
-                onPageChange={setPage}
-              />
-            </div>
+            <div className="flex justify-between items-center mt-3">
+          <div className="flex items-center gap-2">
+            <span className="text-xs">Tampil</span>
+            <select
+              className="border rounded px-1 py-0.5 text-xs"
+              value={limit}
+              onChange={e => { setLimit(Number(e.target.value)); setPage(1); }}
+            >
+              {[10, 20, 50].map(opt => <option key={opt} value={opt}>{opt}/page</option>)}
+            </select>
+          </div>
+          <Pagination currentPage={page} totalPages={totalPages} onPageChange={(p) => setPage(p)} />
+        </div>
           </>
         )}
       </div>

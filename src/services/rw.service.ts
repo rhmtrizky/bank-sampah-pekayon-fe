@@ -7,12 +7,20 @@ export const rwService = {
     const res = await api.get(`/price-list/rw/${rwId}`);
     return res.data;
   },
-  getCollectionSchedules: async (): Promise<CollectionSchedule[]> => {
-    const res = await api.get('/schedule/collection');
+  getCollectionSchedules: async (page?: number, limit?: number): Promise<any> => {
+    const params = new URLSearchParams();
+    if (page) params.append('page', String(page));
+    if (limit) params.append('limit', String(limit));
+    const query = params.toString();
+    const res = await api.get(`/schedule/collection${query ? `?${query}` : ''}`);
     return res.data;
   },
-  getWithdrawSchedules: async (): Promise<WithdrawSchedule[]> => {
-    const res = await api.get('/schedule/withdraw');
+  getWithdrawSchedules: async (page?: number, limit?: number): Promise<any> => {
+    const params = new URLSearchParams();
+    if (page) params.append('page', String(page));
+    if (limit) params.append('limit', String(limit));
+    const query = params.toString();
+    const res = await api.get(`/schedule/withdraw${query ? `?${query}` : ''}`);
     return res.data;
   },
   getRecentTransactions: async (): Promise<RecentTransaction[]> => {
