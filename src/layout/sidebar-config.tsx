@@ -48,6 +48,11 @@ export const rwNavItems: NavItem[] = [
     path: "/rw/schedules",
   },
   {
+    icon: <TableIcon />,
+    name: "Daftar Pengepul",
+    path: "/rw/pengepul-management",
+  },  
+  {
     icon: <BoxCubeIcon />,
     name: "Penjualan Massal",
     path: "/rw/bulk-sales",
