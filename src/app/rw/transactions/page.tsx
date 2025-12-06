@@ -6,7 +6,7 @@ import TransactionTable from "./TransactionTable";
 export default function TransactionsPage() {
   return (
     <div>
-      <PageBreadcrumb pageTitle="Transactions" />
+      <PageBreadcrumb pageTitle="Transaksi Sampah" />
       <div className="space-y-6">
         <TransactionTable />
       </div>

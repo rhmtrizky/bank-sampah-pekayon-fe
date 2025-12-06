@@ -29,11 +29,10 @@ const PriceListModal = ({ open, onClose, onSuccess, rwId, mode, initialData }: P
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    wasteTypesService.list().then((data) => {
-      setWasteTypes(data.map(wt => ({
-        id: wt.waste_type_id,
-        name: wt.name,
-      })));
+    wasteTypesService.list().then((res: any) => {
+      const env = res?.data ?? res;
+      const items = Array.isArray(env) ? env : (env?.data?.items ?? env?.items ?? env?.data ?? []);
+      setWasteTypes((items as any[]).map((wt: any) => ({ id: wt.waste_type_id, name: wt.name })));
     });
   }, []);
 

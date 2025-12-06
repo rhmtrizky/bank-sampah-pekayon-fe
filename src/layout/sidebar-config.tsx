@@ -39,6 +39,11 @@ export const rwNavItems: NavItem[] = [
   },
   {
     icon: <TableIcon />,
+    name: "Daftar Jenis Sampah",
+    path: "/rw/waste-types",
+  },
+  {
+    icon: <TableIcon />,
     name: "Daftar Harga",
     path: "/rw/price-list",
   },

@@ -1,6 +1,7 @@
 import api from "@/lib/axios";
 
 export type Pengepul = {
+  id?: number; 
   pengepul_id: number;
   name: string;
   phone: string;

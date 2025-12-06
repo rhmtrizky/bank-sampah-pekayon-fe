@@ -52,7 +52,7 @@ function getColumns(onEdit: (row: UIPriceRow) => void, onDelete: (row: UIPriceRo
       cell: (row) => (
         <div className="flex gap-2">
           <Button size="sm" variant="outline" onClick={() => onEdit(row)}>Edit</Button>
-          <Button size="sm" variant="outline" onClick={() => onDelete(row)} className="text-red-600 border-red-600">Delete</Button>
+          <Button size="sm" className="bg-red-500 hover:bg-red-700" onClick={() => onDelete(row)} >Delete</Button>
         </div>
       ),
     },
@@ -86,8 +86,10 @@ export default function PriceListTable({ rwId }: Readonly<{ rwId?: number }>) {
         wasteTypesService.list(),
         priceListService.listByRwPaginated(rwId, pageNum, pageLimit),
       ]);
+
+      console.log('Fetched paged price list', wasteTypesData.data);
       const mapped: UIPriceRow[] = paged.data.map(e => {
-        const wt = wasteTypesData.find(w => w.waste_type_id === e.waste_type_id);
+        const wt = wasteTypesData.data.items.find((w: { waste_type_id: number; }) => w.waste_type_id === e.waste_type_id);
         return {
           id: e.price_id,
           price_id: e.price_id,
@@ -165,9 +167,7 @@ export default function PriceListTable({ rwId }: Readonly<{ rwId?: number }>) {
   if (!rwId) {
     return <EmptyState title="RW belum dipilih" description="Silakan pilih RW terlebih dahulu." />;
   }
-  if (rows.length === 0) {
-    return <EmptyState title="Price List Kosong" description="Belum ada harga yang ditetapkan." action={<Button onClick={handleCreate}>Tambah Harga</Button>} />;
-  }
+
   // Pagination controls
   const totalPages = Math.ceil(total / limit);
   return (
@@ -191,7 +191,7 @@ export default function PriceListTable({ rwId }: Readonly<{ rwId?: number }>) {
           </div>
         )}
       </div>
-      <BasicTableOne columns={getColumns(handleEdit, handleDelete)} data={rows} loading={false} />
+      <BasicTableOne columns={getColumns(handleEdit, handleDelete)} data={rows} loading={false} emptyMessage="Data kosong"/>
       <PriceListModal
         open={modalOpen}
         onClose={() => setModalOpen(false)}

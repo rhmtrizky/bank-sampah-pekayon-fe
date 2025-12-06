@@ -58,7 +58,7 @@ const buildColumns = (onEdit: (id: number) => void, onDelete: (id: number) => vo
   ) }
 ];
 
-export default function TransactionTable() {
+export default function   TransactionTable() {
   const [rows, setRows] = useState<UITransactionRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -74,7 +74,7 @@ export default function TransactionTable() {
   const [toDate, setToDate] = useState<string>("");
   const [wasteTypeFilter, setWasteTypeFilter] = useState<string>("");
   
-  const [wasteTypes, setWasteTypes] = useState<WasteType[]>([]);
+  const [wasteTypes, setWasteTypes] = useState<WasteType[] | null>(null);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [editId, setEditId] = useState<number | null>(null);
@@ -128,13 +128,17 @@ export default function TransactionTable() {
     const loadWasteTypes = async () => {
       try {
         const types = await wasteTypesService.list();
-        setWasteTypes(types);
+        const data = types.data.items;
+
+        setWasteTypes(data);
+        console.log('Loaded waste types', data);
       } catch (e) {
         console.error('Failed to load waste types', e);
       }
     };
     loadWasteTypes();
   }, []);
+
 
   const handleApplyFilter = () => {
     setPage(1);
@@ -180,11 +184,15 @@ export default function TransactionTable() {
 
   return (
     <div className="space-y-4">
+      <div className="flex justify-end">
+        <Button size="sm" onClick={() => setIsCreateOpen(true)}>+ Transaksi Offline</Button>
+      </div>
       {/* Filter Section */}
       <div className="rounded-xl border border-gray-200 bg-white p-5 dark:border-white/[0.05] dark:bg-white/[0.03]">
+      
         <div className="mb-4 flex items-center justify-between">
           <h3 className="text-base font-semibold text-gray-800 dark:text-white">Filter Transaksi</h3>
-          <Button size="sm" onClick={() => setIsCreateOpen(true)}>+ Transaksi Offline</Button>
+        
         </div>
         
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -209,7 +217,7 @@ export default function TransactionTable() {
               className="w-full rounded border border-gray-300 bg-white px-3 py-2 text-sm outline-none focus:border-brand-500 dark:border-white/10 dark:bg-white/5 dark:focus:border-brand-500"
             >
               <option value="">Semua Tipe</option>
-              {wasteTypes.map((wt) => (
+              {wasteTypes?.map((wt) => (
                 <option key={wt.waste_type_id} value={wt.waste_type_id}>{wt.name}</option>
               ))}
             </select>
@@ -290,10 +298,8 @@ export default function TransactionTable() {
         <div className="p-4 text-center">Memuat transaksi...</div>
       ) : error ? (
         <EmptyState title="Gagal memuat" description={error} action={<button className="btn btn-sm" onClick={() => load()}>Retry</button>} />
-      ) : rows.length === 0 ? (
-        <EmptyState title="Tidak ada transaksi" description="Belum ada data untuk filter saat ini." />
       ) : (
-        <BasicTableOne columns={columns} data={rows} />
+        <BasicTableOne columns={columns} data={rows} emptyMessage="Data kosong / empty" />
       )}
       <div className="flex justify-between items-center mt-3">
           <div className="flex items-center gap-2">
