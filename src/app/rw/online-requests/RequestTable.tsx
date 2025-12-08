@@ -189,53 +189,56 @@ export default function RequestTable() {
 
   return (
     <>
-      <form className="mb-4 flex flex-wrap gap-2 items-end" onSubmit={handleFilterSubmit}>
-        <div>
-          <label className="block text-xs font-medium text-gray-700 mb-1">Nama Warga</label>
-          <Input
-            type="text"
-            placeholder="Cari nama..."
-            value={filterName}
-            onChange={e => setFilterName(e.target.value)}
-          />
+      <div className="space-y-6">
+        <div className="rounded-xl border border-gray-200 bg-white p-5 dark:border-white/[0.05] dark:bg-white/[0.03]">
+          <form className="flex flex-wrap gap-2 items-end" onSubmit={handleFilterSubmit}>
+            <div>
+              <label className="block text-xs font-medium text-gray-700 mb-1">Nama Warga</label>
+              <Input
+                type="text"
+                placeholder="Cari nama..."
+                value={filterName}
+                onChange={e => setFilterName(e.target.value)}
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-gray-700 mb-1">No. Telepon</label>
+              <Input
+                type="text"
+                placeholder="Cari no. telepon..."
+                value={filterPhone}
+                onChange={e => setFilterPhone(e.target.value)}
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-gray-700 mb-1">Tanggal Setor</label>
+              <Input
+                type="date"
+                value={filterDate}
+                className="w-full rounded border border-gray-300 bg-white px-3 py-3 text-sm outline-none focus:border-brand-500 dark:border-white/10 dark:bg-white/5 dark:focus:border-brand-500"
+                onChange={e => setFilterDate(e.target.value)}
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-gray-700 mb-1">Status</label>
+              <select
+              className="w-full rounded border border-gray-300 bg-white px-3 py-3 text-sm outline-none focus:border-brand-500 dark:border-white/10 dark:bg-white/5 dark:focus:border-brand-500"
+                value={filterStatus}
+                onChange={e => setFilterStatus(e.target.value)}
+              >
+                {statusOptions.map(opt => (
+                  <option key={opt.value} value={opt.value}>{opt.label}</option>
+                ))}
+              </select>
+            </div>
+          
+            <div className="flex gap-2 ml-2">
+              <Button type="submit" size="sm" >Cari</Button>
+              <Button type="submit" size="sm"  variant="outline"   onClick={() => { setFilterName(""); setFilterPhone(""); setFilterDate(""); setFilterStatus(""); setPage(1); }}>Reset</Button>
+            </div>
+          </form>
         </div>
-        <div>
-          <label className="block text-xs font-medium text-gray-700 mb-1">No. Telepon</label>
-          <Input
-            type="text"
-            placeholder="Cari no. telepon..."
-            value={filterPhone}
-            onChange={e => setFilterPhone(e.target.value)}
-          />
-        </div>
-        <div>
-          <label className="block text-xs font-medium text-gray-700 mb-1">Tanggal Setor</label>
-          <Input
-            type="date"
-            value={filterDate}
-            className="w-full rounded border border-gray-300 bg-white px-3 py-3 text-sm outline-none focus:border-brand-500 dark:border-white/10 dark:bg-white/5 dark:focus:border-brand-500"
-            onChange={e => setFilterDate(e.target.value)}
-          />
-        </div>
-        <div>
-          <label className="block text-xs font-medium text-gray-700 mb-1">Status</label>
-          <select
-          className="w-full rounded border border-gray-300 bg-white px-3 py-3 text-sm outline-none focus:border-brand-500 dark:border-white/10 dark:bg-white/5 dark:focus:border-brand-500"
-            value={filterStatus}
-            onChange={e => setFilterStatus(e.target.value)}
-          >
-            {statusOptions.map(opt => (
-              <option key={opt.value} value={opt.value}>{opt.label}</option>
-            ))}
-          </select>
-        </div>
-       
-          <div className="flex gap-2 ml-2">
-                        <Button type="submit" size="sm" >Cari</Button>
-                        <Button type="submit" size="sm"  variant="outline"   onClick={() => { setFilterName(""); setFilterPhone(""); setFilterDate(""); setFilterStatus(""); setPage(1); }}>Reset</Button>
-                      </div>
-      </form>
-
+      </div>
       <div className="space-y-4">
         <BasicTableOne columns={columns} data={rows} emptyMessage="Data kosong / empty" />
         <div className="flex justify-between items-center">

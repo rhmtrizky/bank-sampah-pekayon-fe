@@ -22,47 +22,47 @@ import {
 export const rwDashboardService = {
   getSummary: async (): Promise<RWDashboardSummary> => {
     const response = await api.get('/dashboard/rw/summary');
-    return response.data;
+    return response.data.data;
   },
   getDailyTransactions: async (): Promise<DailyTransactionChartData[]> => {
     const response = await api.get('/dashboard/rw/charts/transactions-daily');
-    return response.data;
+    return response.data.data
   },
   getDailyWeight: async (): Promise<DailyWeightChartData[]> => {
     const response = await api.get('/dashboard/rw/charts/weight-daily');
-    return response.data;
+    return response.data.data
   },
   getWasteComposition: async (): Promise<WasteCompositionData[]> => {
     const response = await api.get('/dashboard/rw/charts/waste-composition');
-    return response.data;
+    return response.data.data
   },
   getRecentTransactions: async (): Promise<RecentTransaction[]> => {
     const response = await api.get('/dashboard/rw/recent/transactions');
-    return response.data;
+    return response.data.data
   },
   getRecentRequests: async (): Promise<RecentRequest[]> => {
     const response = await api.get('/dashboard/rw/recent/requests');
-    return response.data;
+    return response.data.data.data
   },
   getRtStatistics: async (): Promise<RtStatistic[]> => {
     const response = await api.get('/dashboard/rw/rt-statistics');
-    return response.data;
+    return response.data.data
   },
   getSalesSummary: async (): Promise<SalesSummaryData> => {
     const response = await api.get('/dashboard/rw/sales-summary');
-    return response.data;
+    return response.data.data ;
   },
   getRecentSales: async (): Promise<RecentSale[]> => {
     const response = await api.get('/dashboard/rw/recent-sales');
-    return response.data;
+    return response.data.data
   },
   getAlerts: async (): Promise<RWAlerts> => {
     const response = await api.get('/dashboard/rw/alerts');
-    return response.data;
+    return response.data.data
   },
   getSchedules: async (): Promise<RWSchedules> => {
     const response = await api.get('/dashboard/rw/schedules');
-    return response.data;
+    return response.data.data
   }
 };
 

@@ -27,7 +27,8 @@ export default function SummaryCards() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await rwDashboardService.getSummary();
+        const data: any = await rwDashboardService.getSummary();
+        console.log('Dashboard summary data:', data);
         setSummary(data);
       } catch (error) {
         console.error("Failed to fetch summary", error);

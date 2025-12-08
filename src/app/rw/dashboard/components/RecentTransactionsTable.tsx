@@ -20,6 +20,7 @@ export default function RecentTransactionsTable() {
     const fetchData = async () => {
       try {
         const data = await rwDashboardService.getRecentTransactions();
+        console.log('Recent transactions data:', data);
         setTransactions(data);
       } catch (error) {
         console.error("Failed to fetch recent transactions", error);

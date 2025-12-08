@@ -17,10 +17,11 @@ export default function WeightChart() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const result = await rwDashboardService.getDailyWeight();
+        const result: any = await rwDashboardService.getDailyWeight();
+        console.log('Weight chart data:', result.data);
         // Map backend data to chart format
-        const labels = result?.map((item) => item.date);
-        const values = result?.map((item) => item.total_weight);
+        const labels = result?.map((item: any) => item.date);
+        const values = result?.map((item: any) => item.total_weight);
         setData({ labels, values });
       } catch (error) {
         console.error("Failed to fetch weight chart data", error);

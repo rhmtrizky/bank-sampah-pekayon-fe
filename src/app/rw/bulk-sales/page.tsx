@@ -7,7 +7,7 @@ export default function RWBulkSalesPage() {
   return (
     <div>
    
-        <PageBreadcrumb pageTitle="Bulk Sales (To Pengepul)" />
+        <PageBreadcrumb pageTitle="Penjualan ke Pengepul" />
  
       <div className="space-y-6">
         <BulkSaleTable />

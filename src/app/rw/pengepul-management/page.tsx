@@ -85,6 +85,8 @@ export default function PengepulPage() {
           <Button onClick={() => setShowCreate(true)}>Tambah Pengepul</Button>
         </div>
 
+       <div className="space-y-6">
+        <div className="rounded-xl border border-gray-200 bg-white p-5 dark:border-white/[0.05] dark:bg-white/[0.03]">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
           <div>
             <label className="block text-xs mb-1">Nama</label>
@@ -98,6 +100,8 @@ export default function PengepulPage() {
             <Button onClick={() => { setPage(1); fetchData(); }}>Terapkan</Button>
             <Button variant="outline" onClick={() => { setFilterName(""); setFilterPhone(""); setPage(1); }}>Reset</Button>
           </div>
+        </div>
+        </div>
         </div>
 
         <BasicTableOne

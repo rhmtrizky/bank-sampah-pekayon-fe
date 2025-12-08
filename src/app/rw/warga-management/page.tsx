@@ -7,12 +7,14 @@ import Pagination from "@/components/tables/Pagination";
 import EmptyState from "@/components/common/EmptyState";
 import { wargaService, Warga } from "@/services/warga.service";
 import CreateWargaModal from "./CreateWargaModal";
+import { useRouter } from "next/navigation";
 
 interface UIWarga extends Warga {
   id: number;
 }
 
 export default function WargaManagementPage() {
+  const router = useRouter();
   const [warga, setWarga] = useState<UIWarga[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -102,6 +104,14 @@ export default function WargaManagementPage() {
         <span className="text-sm text-gray-500">
           {row.created_at ? new Date(row.created_at).toLocaleDateString("id-ID") : "-"}
         </span>
+      ),
+    },
+    {
+      header: "Action",
+      cell: (row) => (
+        <Button size="sm" variant="outline" onClick={() => router.push(`/rw/warga-management/${row.user_id}`)}>
+          Detail
+        </Button>
       ),
     },
   ];

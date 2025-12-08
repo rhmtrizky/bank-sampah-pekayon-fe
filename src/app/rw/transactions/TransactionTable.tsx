@@ -52,8 +52,10 @@ const buildColumns = (onEdit: (id: number) => void, onDelete: (id: number) => vo
  
   { header: 'Action', cell: (row) => (
     <div className="flex gap-2">
-      <button onClick={() => onEdit(row.id)} className="text-brand-500 hover:text-brand-600 hover:underline">Edit</button>
-      <button onClick={() => onDelete(row.id)} className="text-red-500 hover:text-red-600 hover:underline">Delete</button>
+     
+      
+         <Button size="sm" variant="outline" onClick={() => onEdit(row.id)}>Edit</Button>
+          <Button size="sm" variant="primary" className="bg-red-600 hover:bg-red-700"  onClick={() => onDelete(row.id)} >Hapus</Button>
     </div>
   ) }
 ];

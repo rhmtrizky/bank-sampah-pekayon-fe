@@ -20,6 +20,7 @@ export default function RecentRequestsTable() {
     const fetchData = async () => {
       try {
         const data = await rwDashboardService.getRecentRequests();
+        console.log('Recent requests data:', data);
         setRequests(data);
       } catch (error) {
         console.error("Failed to fetch recent requests", error);

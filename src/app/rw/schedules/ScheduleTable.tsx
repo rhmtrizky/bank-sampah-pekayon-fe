@@ -38,8 +38,10 @@ const buildColumns = (onEdit: (row: UIScheduleRow) => void, onDelete: (row: UISc
     header: "Action",
     cell: (row) => (
       <div className="flex gap-2">
-        <button className="text-brand-500 hover:text-brand-600" onClick={() => onEdit(row)}>Edit</button>
-        <button className="text-error-500 hover:text-error-600" onClick={() => onDelete(row)}>Delete</button>
+      
+         <Button size="sm" variant="outline" onClick={() => onEdit(row)}>Edit</Button>
+          <Button size="sm" variant="primary" className="bg-red-600 hover:bg-red-700" onClick={() => onDelete(row)}>Hapus</Button>
+        
       </div>
     ),
   },

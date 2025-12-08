@@ -59,7 +59,7 @@ export const rwNavItems: NavItem[] = [
   },  
   {
     icon: <BoxCubeIcon />,
-    name: "Penjualan Massal",
+    name: "Penjualan",
     path: "/rw/bulk-sales",
   },
   {

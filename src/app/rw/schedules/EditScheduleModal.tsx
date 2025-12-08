@@ -99,7 +99,7 @@ export default function EditScheduleModal({ isOpen, onClose, type, scheduleId, i
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} className="max-w-[600px] p-5 lg:p-10">
-      <form onSubmit={handleSubmit} className="p-6 space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-4">
         <div className="text-lg font-semibold">Edit Jadwal {type === "pengepulan" ? "Pengepulan" : "Pencairan"}</div>
         {error && <div className="text-red-600 text-sm">{error}</div>}
         <div>

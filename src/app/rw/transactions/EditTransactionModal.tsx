@@ -5,6 +5,7 @@ import Label from "@/components/form/Label";
 import { transactionsService, Transaction } from "@/services/transactions.service";
 import Input from "@/components/form/input/InputField";
 import { Modal } from "@/components/ui/modal";
+import { wasteTypesService } from "@/services/waste-types.service";
 
 interface Props {
   isOpen: boolean;
@@ -17,7 +18,6 @@ export default function EditTransactionModal({ isOpen, onClose, transactionId, o
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [wasteTypeId, setWasteTypeId] = useState("");
   const [weightKg, setWeightKg] = useState("");
 
   useEffect(() => {
@@ -27,7 +27,7 @@ export default function EditTransactionModal({ isOpen, onClose, transactionId, o
       setError(null);
       try {
         const trx: Transaction = await transactionsService.get(transactionId);
-        setWasteTypeId(String(trx.waste_type_id));
+        console.log(trx);
         setWeightKg(String(trx.weight_kg));
       } catch (e: any) {
         setError(e?.response?.data?.message || e?.message || "Gagal memuat transaksi");
@@ -38,8 +38,10 @@ export default function EditTransactionModal({ isOpen, onClose, transactionId, o
     load();
   }, [transactionId, isOpen]);
 
+  
+
+
   const reset = () => {
-    setWasteTypeId("");
     setWeightKg("");
     setError(null);
   };
@@ -48,15 +50,14 @@ export default function EditTransactionModal({ isOpen, onClose, transactionId, o
     e.preventDefault();
     if (!transactionId) return;
     setError(null);
-    const wid = parseInt(wasteTypeId, 10);
     const w = parseFloat(weightKg);
-    if (!wid || !w || w <= 0) {
+    if ( !w || w <= 0) {
       setError("Waste type dan berat harus valid");
       return;
     }
     try {
       setLoading(true);
-      await transactionsService.update(transactionId, { waste_type_id: wid, weight_kg: w });
+      await transactionsService.update(transactionId, { weight_kg: w });
       onSuccess();
       reset();
       onClose();
@@ -79,10 +80,6 @@ export default function EditTransactionModal({ isOpen, onClose, transactionId, o
         <div className="p-4 text-center text-sm">Memuat data...</div>
       ) : (
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <Label>Waste Type ID</Label>
-            <Input type="number" value={wasteTypeId} onChange={(e) => setWasteTypeId(e.target.value)} />
-          </div>
           <div>
             <Label>Berat (kg)</Label>
             <Input type="number" step={0.01} min="0.01" value={weightKg} onChange={(e) => setWeightKg(e.target.value)} />

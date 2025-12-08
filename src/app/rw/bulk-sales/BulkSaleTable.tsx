@@ -221,7 +221,7 @@ export default function BulkSaleTable() {
   return (
     <div className="space-y-4">
       <div className="flex justify-end">
-        <Button onClick={openAdd}>Add Bulk Sale</Button>
+        <Button onClick={openAdd}>Tambah Penjualan</Button>
       </div>
       <BasicTableOne columns={columns} data={data} loading={loading} emptyMessage="Tidak ada data" />
       {data.length > 0 && (

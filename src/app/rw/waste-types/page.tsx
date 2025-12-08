@@ -44,10 +44,8 @@ export default function WasteTypesPage() {
       const res = await wasteTypesService.list({ page, limit, name: filterName || undefined });
       const envelope = res?.data;
       const data = envelope?.items ?? [];
-      const pagination = envelope?.pagination ?? {};
       setItems(data || []);
-      const tp = envelope?.totalPages;
-      console.log('pagination:', pagination, 'totalPages:', tp, 'envelope:', envelope);
+      const tp = envelope?.totalPages || 1;
       setTotalPages(tp);
     } catch (e) {
       console.error(e);
@@ -73,10 +71,11 @@ export default function WasteTypesPage() {
 
   return (
     <div className="space-y-4">
-         <PageBreadcrumb pageTitle="Manajemen Jenis Sampah" />
+        <PageBreadcrumb pageTitle="Manajemen Jenis Sampah" />
       
-
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-2 mt-10 ">
+       <div className="space-y-6">
+        <div className="rounded-xl border border-gray-200 bg-white p-5 dark:border-white/[0.05] dark:bg-white/[0.03]">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-2 ">
           <div>
             <Input value={filterName} onChange={(e) => setFilterName(e.target.value)} placeholder="Cari nama" />
           </div>
@@ -88,6 +87,8 @@ export default function WasteTypesPage() {
           <div className="flex justify-end md:col-span-2">
             <Button onClick={() => setShowCreate(true)}>+ Tambah Jenis Sampah</Button>
           </div>
+        </div>
+        </div>
         </div>
 
 

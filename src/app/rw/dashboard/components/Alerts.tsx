@@ -20,6 +20,7 @@ export default function Alerts() {
     const fetchData = async () => {
       try {
         const data = await rwDashboardService.getAlerts();
+        console.log('Fetched alerts data:', data);
         const newAlerts: AlertItem[] = [];
 
         if (data.pending_requests > 0) {
